@@ -77,28 +77,43 @@
     <div id="ad-text">בעוד <span id="countdown">10</span> שניות, שיחת הוואטסאפ תיפתח</div>
     <div id="thank-you-container">
       <div id="thank-you-text">תודה, צוות דרושים - למילואים</div>
-      <button onclick="window.location.href='https://api.whatsapp.com/send?phone=972545660439&text=*%D7%9E.%D7%90:*%0a*%D7%A9%D7%9D+%D7%9E%D7%9C%D7%90:*%0a*%D7%AA%D7%A4%D7%A7%D7%99%D7%93+%D7%9E%D7%91%D7%95%D7%A7%D7%A9:*%0a';">מעבר מיידי למגייס</button>
+      <button id="whatsapp-button">מעבר מיידי למגייס</button>
     </div>
     <img src="https://gcdnb.pbrd.co/images/arwuUCy2GLje.jpg" alt="Your Ad">
   </div>
 
   <script>
-    const redirectUrl = 'https://api.whatsapp.com/send?phone=972545660439&text=*%D7%9E.%D7%90:*%0a*%D7%A9%D7%9D+%D7%9E%D7%9C%D7%90:*%0a*%D7%AA%D7%A4%D7%A7%D7%99%D7%93+%D7%9E%D7%91%D7%95%D7%A7%D7%A9:*%0a';
-    let countdown = 10;
-    const countdownElement = document.getElementById('countdown');
+    function getParameterByName(name, url = window.location.href) {
+      name = name.replace(/[\[\]]/g, '\\$&');
+      const regex = new RegExp(`[?&]${name}(=([^&#]*)|&|#|$)`);
+      const results = regex.exec(url);
+      if (!results) return null;
+      if (!results[2]) return '';
+      return decodeURIComponent(results[2].replace(/\+/g, ' '));
+    }
 
+    const countdownElement = document.getElementById('countdown');
+    const whatsappButton = document.getElementById('whatsapp-button');
+
+    let countdown = 10;
     const countdownInterval = setInterval(() => {
       countdown -= 1;
       countdownElement.textContent = countdown;
       if (countdown === 0) {
         clearInterval(countdownInterval);
+        redirectToWhatsapp();
       }
     }, 1000);
 
-    setTimeout(function() {
-      document.getElementById('ad').style.display = 'none';
-      window.location.href = redirectUrl;
-    }, 10000);
+    whatsappButton.addEventListener('click', redirectToWhatsapp);
+
+    function redirectToWhatsapp() {
+      const phoneNumber = getParameterByName('phone');
+      if (phoneNumber) {
+        const whatsappUrl = `https://api.whatsapp.com/send?phone=${phoneNumber}&text=*%D7%9E.%D7%90:*%0a*%D7%A9%D7%9D+%D7%9E%D7%9C%D7%90:*%0a*%D7%AA%D7%A4%D7%A7%D7%99%D7%93+%D7%9E%D7%91%D7%95%D7%A7%D7%A9:*%0a`;
+        window.location.href = whatsappUrl;
+      }
+    }
   </script>
 </body>
 </html>
